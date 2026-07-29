@@ -1,0 +1,17 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+# Não é necessário redirect de SPA: a navegação do app usa hash routes (#/...),
+# então cada página é servida normalmente a partir de index.html.
+
+# Mapeia as URLs amigáveis usadas em js/app.js para as funções serverless reais.
+[[redirects]]
+  from = "/api/criar-pagamento"
+  to = "/.netlify/functions/create-pix"
+  status = 200
+
+[[redirects]]
+  from = "/api/status-pagamento"
+  to = "/.netlify/functions/check-pix"
+  status = 200

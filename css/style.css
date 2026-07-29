@@ -1,0 +1,559 @@
+/* =========================================================================
+   LASH ACADEMY — IDENTIDADE VISUAL
+   Paleta: Nude / Rosa Quente / Dourado / Cinza-escuro
+   Tipografia: Playfair Display (display) + Poppins (corpo/interface)
+   ========================================================================= */
+
+:root{
+  --cream:      #FBF6F1;
+  --nude:       #EDE0D2;
+  --rosa:       #E5A2A6;
+  --rosa-forte: #C97B84;
+  --dourado:    #C9A227;
+  --dourado-lt: #E4C766;
+  --preto:      #221C1A;
+  --cinza:      #4A403C;
+  --branco:     #FFFFFF;
+
+  --shadow-soft: 0 10px 30px -12px rgba(34,28,26,0.18);
+  --radius: 18px;
+}
+
+*{ box-sizing: border-box; }
+
+html{ scroll-behavior: smooth; }
+
+body{
+  margin:0;
+  background: var(--cream);
+  color: var(--preto);
+  font-family: 'Poppins', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,h2,h3,.font-display{
+  font-family: 'Playfair Display', serif;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+::selection{ background: var(--rosa); color: var(--branco); }
+
+:focus-visible{
+  outline: 2px solid var(--dourado);
+  outline-offset: 2px;
+}
+
+/* ---------- Layout shell ---------- */
+.app-shell{
+  display:flex;
+  min-height:100vh;
+}
+
+.sidebar{
+  width: 250px;
+  flex-shrink:0;
+  background: linear-gradient(180deg, var(--preto), #2c2422);
+  color: var(--cream);
+  display:flex;
+  flex-direction:column;
+  padding: 28px 20px;
+  position: sticky;
+  top:0;
+  height:100vh;
+}
+
+.sidebar .brand{
+  font-family:'Playfair Display', serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.03em;
+  color: var(--branco);
+  margin-bottom: 4px;
+}
+.sidebar .brand span{ color: var(--dourado-lt); }
+.sidebar .brand-sub{
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--rosa);
+  margin-bottom: 30px;
+}
+
+.nav-item{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  color: rgba(251,246,241,0.75);
+  cursor:pointer;
+  font-size: 0.92rem;
+  transition: background .18s ease, color .18s ease;
+  margin-bottom: 6px;
+  border: none;
+  background: transparent;
+  width:100%;
+  text-align:left;
+  font-family:'Poppins',sans-serif;
+}
+.nav-item:hover{ background: rgba(255,255,255,0.06); color: var(--branco); }
+.nav-item.active{
+  background: linear-gradient(90deg, rgba(201,162,39,0.22), rgba(201,162,39,0.05));
+  color: var(--dourado-lt);
+  box-shadow: inset 3px 0 0 var(--dourado);
+}
+.nav-item svg{ width:18px; height:18px; flex-shrink:0; }
+
+.sidebar-footer{
+  margin-top:auto;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  font-size: 0.75rem;
+  color: rgba(251,246,241,0.5);
+}
+
+.topbar{
+  display:none;
+  align-items:center;
+  justify-content:space-between;
+  background: var(--preto);
+  color: var(--branco);
+  padding: 14px 18px;
+  position: sticky;
+  top:0;
+  z-index: 40;
+}
+
+.main-area{
+  flex:1;
+  min-width:0;
+  padding: 36px 44px 80px;
+}
+
+@media (max-width: 900px){
+  .sidebar{ display:none; }
+  .sidebar.mobile-open{
+    display:flex;
+    position: fixed;
+    inset: 0 20% 0 0;
+    z-index: 50;
+    height: 100vh;
+  }
+  .topbar{ display:flex; }
+  .main-area{ padding: 22px 18px 90px; }
+}
+
+/* ---------- Signature: lash-curve divider ---------- */
+.lash-divider{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin: 26px 0;
+  color: var(--dourado);
+}
+.lash-divider .line{
+  flex:1;
+  height:1px;
+  background: linear-gradient(90deg, transparent, var(--dourado), transparent);
+}
+
+/* ---------- Cards ---------- */
+.card{
+  background: var(--branco);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  padding: 26px;
+  border: 1px solid rgba(34,28,26,0.05);
+}
+
+.eyebrow{
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--rosa-forte);
+  font-weight: 600;
+}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-weight:600;
+  font-size: 0.92rem;
+  cursor:pointer;
+  border:none;
+  transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+}
+.btn:active{ transform: scale(0.97); }
+.btn-primary{
+  background: linear-gradient(120deg, var(--preto), #35292544);
+  background: var(--preto);
+  color: var(--branco);
+}
+.btn-primary:hover{ box-shadow: 0 8px 20px -6px rgba(34,28,26,0.45); }
+.btn-gold{
+  background: linear-gradient(120deg, var(--dourado-lt), var(--dourado));
+  color: var(--preto);
+}
+.btn-gold:hover{ box-shadow: 0 8px 20px -6px rgba(201,162,39,0.55); }
+.btn-outline{
+  background: transparent;
+  border: 1.5px solid var(--preto);
+  color: var(--preto);
+}
+.btn-rosa{
+  background: var(--rosa-forte);
+  color: var(--branco);
+}
+.btn:disabled{ opacity:0.45; cursor:not-allowed; }
+
+/* ---------- Signature: fan-shaped level meter ---------- */
+.fan-meter{
+  position: relative;
+  width: 130px;
+  height: 90px;
+}
+.fan-meter svg line{
+  stroke: var(--nude);
+  stroke-width: 4;
+  stroke-linecap: round;
+  transition: stroke .3s ease;
+}
+.fan-meter svg line.lit{
+  stroke: var(--dourado);
+}
+
+/* ---------- Progress bar ---------- */
+.progress-track{
+  width:100%;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--nude);
+  overflow:hidden;
+}
+.progress-fill{
+  height:100%;
+  background: linear-gradient(90deg, var(--rosa-forte), var(--dourado));
+  border-radius:999px;
+  transition: width .5s ease;
+}
+
+/* ---------- Lesson list ---------- */
+.lesson-row{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  border:1px solid rgba(34,28,26,0.08);
+  margin-bottom:10px;
+  cursor:pointer;
+  transition: background .15s ease, border-color .15s ease;
+  background: var(--branco);
+}
+.lesson-row:hover{ border-color: var(--dourado); background:#FFFDF9; }
+.lesson-row.locked{ cursor:not-allowed; opacity:0.72; }
+.lesson-row.done{ border-color: rgba(201,162,39,0.4); background: #FFFCF3; }
+
+.lesson-badge-num{
+  width:38px; height:38px;
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:600;
+  background: var(--nude);
+  color: var(--preto);
+  flex-shrink:0;
+}
+.lesson-row.done .lesson-badge-num{ background: var(--dourado); color:var(--branco); }
+.lesson-row.locked .lesson-badge-num{ background:#E9E3DE; color:#9c9490; }
+
+/* ---------- Modal ---------- */
+.modal-overlay{
+  position: fixed; inset:0;
+  background: rgba(20,16,15,0.68);
+  display:flex; align-items:center; justify-content:center;
+  z-index: 100;
+  padding: 20px;
+}
+.modal-box{
+  background: var(--cream);
+  border-radius: 22px;
+  max-width: 480px;
+  width:100%;
+  padding: 34px;
+  box-shadow: 0 30px 60px -20px rgba(0,0,0,0.5);
+  border: 1px solid rgba(201,162,39,0.35);
+  position:relative;
+}
+.modal-close{
+  position:absolute; top:14px; right:16px;
+  background:none; border:none; font-size:1.3rem; cursor:pointer; color:var(--cinza);
+}
+
+/* ---------- Badge grid ---------- */
+.badge-tile{
+  border-radius: 16px;
+  padding: 18px 12px;
+  text-align:center;
+  background: var(--branco);
+  border: 1px solid rgba(34,28,26,0.08);
+}
+.badge-tile.locked{ opacity: 0.35; filter: grayscale(1); }
+.badge-emoji{ font-size: 2rem; display:block; margin-bottom:8px; }
+
+/* ---------- Catalog cards ---------- */
+.catalog-card{
+  border-radius: 18px;
+  background: var(--branco);
+  border: 1px solid rgba(34,28,26,0.08);
+  padding: 20px;
+  height:100%;
+}
+.curve-pill{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width: 30px;
+  padding: 3px 9px;
+  border-radius:999px;
+  background: var(--nude);
+  font-size:0.78rem;
+  font-weight:600;
+  margin-right:6px;
+}
+
+/* ---------- Certificate ---------- */
+.certificate{
+  background: var(--cream);
+  border: 3px double var(--dourado);
+  border-radius: 6px;
+  padding: 50px 44px;
+  position: relative;
+  overflow:hidden;
+}
+.certificate::before, .certificate::after{
+  content:"";
+  position:absolute;
+  width: 90px; height:90px;
+  border: 2px solid var(--dourado);
+  opacity:0.5;
+}
+.certificate::before{ top:14px; left:14px; border-right:none; border-bottom:none; }
+.certificate::after{ bottom:14px; right:14px; border-left:none; border-top:none; }
+
+@media print{
+  .no-print{ display:none !important; }
+  .app-shell{ display:block; }
+  .main-area{ padding:0; }
+  body{ background: white; }
+}
+
+/* Toast */
+.toast{
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--preto);
+  color: var(--branco);
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  z-index: 200;
+  box-shadow: var(--shadow-soft);
+  display:flex; align-items:center; gap:8px;
+  animation: toast-in .25s ease;
+}
+@keyframes toast-in{ from{ opacity:0; transform: translate(-50%,10px);} to{opacity:1; transform:translate(-50%,0);} }
+
+/* Quiz */
+.quiz-option{
+  display:block;
+  width:100%;
+  text-align:left;
+  padding: 13px 16px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(34,28,26,0.12);
+  background: var(--branco);
+  cursor:pointer;
+  margin-bottom:10px;
+  transition: border-color .15s ease, background .15s ease;
+}
+.quiz-option:hover{ border-color: var(--rosa-forte); }
+.quiz-option.selected{ border-color: var(--dourado); background: #FFFAEF; }
+.quiz-option.correct{ border-color:#7BA05B; background:#F2F8EC; }
+.quiz-option.wrong{ border-color:#C96B6B; background:#FBF0F0; }
+
+.scroll-hide::-webkit-scrollbar{ display:none; }
+
+/* ---------- Ilustrações animadas de aplicação de cílios ---------- */
+.lash-illus-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:18px;
+  margin-top:16px;
+}
+
+.lash-illus{
+  background: linear-gradient(180deg,#FFFDFB, var(--cream));
+  border: 1px solid rgba(201,162,39,0.22);
+  border-radius: 20px;
+  padding: 14px 16px 18px;
+  text-align:center;
+}
+
+.lash-illus-svg{
+  width:100%;
+  height:auto;
+  max-height:150px;
+  display:block;
+  margin: 0 auto;
+}
+
+.lash-illus-caption{
+  margin-top:8px;
+}
+.lash-illus-caption strong{
+  display:block;
+  font-family:'Playfair Display', serif;
+  font-size:0.98rem;
+  color: var(--preto);
+}
+.lash-illus-caption span{
+  display:block;
+  font-size:0.76rem;
+  color: var(--cinza);
+  margin-top:2px;
+  line-height:1.4;
+}
+
+.lash-illus-replay{
+  margin-top:10px;
+  background:none;
+  border:none;
+  color: var(--rosa-forte);
+  font-size:0.76rem;
+  font-weight:600;
+  cursor:pointer;
+  letter-spacing:0.02em;
+}
+.lash-illus-replay:hover{ color: var(--dourado); }
+
+.lash-stroke{
+  fill:none;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+
+.lash-draw{
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: lashDraw 0.5s ease-out forwards;
+  animation-delay: var(--delay, 0s);
+}
+
+@keyframes lashDraw{
+  to{ stroke-dashoffset: 0; }
+}
+
+.lash-tuft{
+  opacity: 0;
+  transform: translateY(-9px) scale(0.85);
+  animation: lashPop 0.42s cubic-bezier(.2,1.4,.4,1) forwards;
+  animation-delay: var(--delay, 0s);
+}
+
+@keyframes lashPop{
+  60%{ opacity: 1; transform: translateY(1px) scale(1.04); }
+  100%{ opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.lash-sparkle{
+  font-size: 9px;
+  fill: var(--dourado);
+  opacity: 0;
+  animation: lashSparkle 1.6s ease-in-out forwards;
+  animation-delay: var(--delay, 0s);
+}
+.lash-sparkle-sm{ font-size: 6px; }
+
+@keyframes lashSparkle{
+  0%{ opacity:0; transform: scale(0.4); }
+  30%{ opacity:1; transform: scale(1.1); }
+  55%{ opacity:0.5; transform: scale(0.9); }
+  75%{ opacity:1; transform: scale(1); }
+  100%{ opacity:0.55; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .lash-draw{ animation: none; stroke-dashoffset: 0; }
+  .lash-tuft{ animation: none; opacity:1; transform:none; }
+  .lash-sparkle{ animation: none; opacity: 0.7; }
+}
+
+/* ---------- Rodapé padrão Elite Digital IA ---------- */
+.site-footer{
+  background: var(--preto);
+  padding: 40px 24px 48px;
+}
+.site-footer-inner{
+  max-width: 620px;
+  margin: 0 auto;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+}
+.site-footer-line{
+  height: 1px;
+  background: rgba(228,199,102,0.28);
+  margin-bottom: 26px;
+}
+.site-footer-text{
+  color: rgba(251,246,241,0.68);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin: 0 0 22px;
+}
+.site-footer-brand{
+  color: var(--dourado-lt);
+  text-decoration: none;
+}
+.site-footer-brand:hover{ text-decoration: underline; }
+.site-footer-btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: 1.3px solid var(--dourado-lt);
+  border-radius: 999px;
+  color: var(--dourado-lt);
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 0.92rem;
+  text-decoration: none;
+  transition: background .18s ease, color .18s ease;
+}
+.site-footer-btn:hover{
+  background: var(--dourado-lt);
+  color: var(--preto);
+}
+
+/* ---------- Indicador de status Pix ---------- */
+.pix-pulse{
+  display:inline-block;
+  width:8px; height:8px;
+  border-radius:50%;
+  background: var(--dourado);
+  margin-right:6px;
+  animation: pixPulse 1.4s ease-in-out infinite;
+}
+@keyframes pixPulse{
+  0%, 100%{ opacity:1; transform: scale(1); }
+  50%{ opacity:0.4; transform: scale(1.5); }
+}
+@media (prefers-reduced-motion: reduce){
+  .pix-pulse{ animation: none; }
+}
