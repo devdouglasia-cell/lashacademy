@@ -7,7 +7,7 @@
 // O valor cobrado é definido AQUI, no servidor (nunca confie em um valor vindo
 // do navegador, pois qualquer pessoa pode alterá-lo pelo DevTools antes de
 // enviar a requisição). Se for mudar o preço da Formação Completa, troque o
-// número abaixo E o valor exibido em js/data.js (COURSE_DATA.precoFormacaoCompleta).
+// número abaixo E o valor exibido em js/data.js (COURSE_DATA.formacao.preco).
 //
 // Requer a variável de ambiente MP_ACCESS_TOKEN configurada no painel da
 // Netlify (Site settings → Environment variables). Veja o README para o
