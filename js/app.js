@@ -664,19 +664,67 @@ function openUpsellModal(){
   overlay.id = "upsell-overlay";
 
   let pollTimer = null;
+  let countdownTimer = null;
+
   const preco = COURSE_DATA.formacao.preco;
+  const precoOriginal = COURSE_DATA.formacao.precoOriginal;
   const precoFormatado = preco.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  const precoOriginalFormatado = precoOriginal
+    ? precoOriginal.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })
+    : null;
+  const desconto = precoOriginal ? Math.round((1 - preco / precoOriginal) * 100) : 0;
+  const promoDeadline = COURSE_DATA.formacao.promocaoValidaAte
+    ? new Date(COURSE_DATA.formacao.promocaoValidaAte)
+    : null;
 
   function stopPolling(){
     if(pollTimer){ clearInterval(pollTimer); pollTimer = null; }
   }
+  function stopCountdown(){
+    if(countdownTimer){ clearInterval(countdownTimer); countdownTimer = null; }
+  }
 
   function fechar(){
     stopPolling();
+    stopCountdown();
     overlay.remove();
   }
 
+  function formatarContagem(diffMs){
+    if(diffMs <= 0) return null;
+    const totalSeg = Math.floor(diffMs / 1000);
+    const dias = Math.floor(totalSeg / 86400);
+    const horas = Math.floor((totalSeg % 86400) / 3600);
+    const min = Math.floor((totalSeg % 3600) / 60);
+    const seg = totalSeg % 60;
+    const pad = n => String(n).padStart(2, "0");
+    return dias > 0
+      ? `${dias}d ${pad(horas)}h ${pad(min)}m`
+      : `${pad(horas)}h ${pad(min)}m ${pad(seg)}s`;
+  }
+
+  function iniciarContagem(){
+    if(!promoDeadline) return;
+    const el = overlay.querySelector("#contagem-promo");
+    if(!el) return;
+    const tick = () => {
+      const diff = promoDeadline.getTime() - Date.now();
+      const texto = formatarContagem(diff);
+      const alvo = overlay.querySelector("#contagem-promo");
+      if(!alvo) { stopCountdown(); return; }
+      if(!texto){
+        alvo.textContent = "Condição promocional encerrada";
+        stopCountdown();
+        return;
+      }
+      alvo.textContent = `Condição especial expira em ${texto}`;
+    };
+    tick();
+    countdownTimer = setInterval(tick, 1000);
+  }
+
   function paintIntro(){
+    const nomeAtual = (state.perfil.nome && state.perfil.nome !== "Sua Aluna") ? state.perfil.nome : "";
     overlay.innerHTML = `
       <div class="modal-box">
         <button class="modal-close" aria-label="Fechar">✕</button>
@@ -692,18 +740,49 @@ function openUpsellModal(){
           <li>Calculadora de secagem de cola</li>
           <li>Quiz final com emissão automática de certificado</li>
         </ul>
-        <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:16px;">
-          <span class="font-display" style="font-size:1.7rem;">${precoFormatado}</span>
-          <span style="font-size:0.8rem;color:var(--cinza);">pagamento único via Pix</span>
+
+        <div style="background:var(--nude);border-radius:14px;padding:16px 18px;margin-bottom:18px;">
+          <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;">
+            ${precoOriginalFormatado ? `<span style="font-size:1rem;color:var(--cinza);text-decoration:line-through;">${precoOriginalFormatado}</span>` : ""}
+            <span class="font-display" style="font-size:1.9rem;color:var(--rosa-forte);">${precoFormatado}</span>
+            ${desconto > 0 ? `<span style="background:var(--rosa-forte);color:var(--branco);font-size:0.75rem;font-weight:700;padding:3px 10px;border-radius:999px;">-${desconto}% hoje</span>` : ""}
+          </div>
+          <div style="font-size:0.78rem;color:var(--cinza);margin-top:4px;">pagamento único via Pix · acesso liberado na hora</div>
+          ${promoDeadline ? `<div id="contagem-promo" style="font-size:0.82rem;color:var(--rosa-forte);font-weight:600;margin-top:8px;">calculando...</div>` : ""}
         </div>
-        <button class="btn btn-gold" id="btn-gerar-pix" style="width:100%;">Pagar com Pix →</button>
+
+        <label style="font-size:0.85rem;font-weight:600;display:block;margin-bottom:6px;">
+          Seu nome completo <span style="font-weight:400;color:var(--cinza);">(vai aparecer no seu certificado)</span>
+        </label>
+        <input id="input-nome-checkout" type="text" placeholder="Digite seu nome completo aqui"
+               value="${escapeHtml(nomeAtual)}"
+               style="width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid rgba(34,28,26,0.15);margin-bottom:18px;font-size:0.95rem;">
+
+        <button class="btn btn-gold" id="btn-gerar-pix" style="width:100%;">Garantir minha vaga com Pix →</button>
+        <p style="font-size:0.72rem;color:var(--cinza);margin-top:10px;text-align:center;">
+          Sua vaga na condição promocional fica reservada só para hoje.
+        </p>
       </div>
     `;
     overlay.querySelector(".modal-close").addEventListener("click", fechar);
-    overlay.querySelector("#btn-gerar-pix").addEventListener("click", gerarPix);
+    overlay.querySelector("#btn-gerar-pix").addEventListener("click", () => {
+      const nomeInput = overlay.querySelector("#input-nome-checkout");
+      const nome = (nomeInput.value || "").trim();
+      if(!nome){
+        nomeInput.style.borderColor = "var(--rosa-forte)";
+        nomeInput.focus();
+        showToast("Digite seu nome completo para continuar");
+        return;
+      }
+      state.perfil.nome = nome;
+      saveState();
+      gerarPix();
+    });
+    iniciarContagem();
   }
 
   function paintCarregando(){
+    stopCountdown();
     overlay.innerHTML = `
       <div class="modal-box" style="text-align:center;">
         <button class="modal-close" aria-label="Fechar">✕</button>
