@@ -6,8 +6,18 @@
 const COURSE_DATA = {
 
   // Preço da Formação Profissional Completa (usado na cobrança Pix)
+  //
+  // IMPORTANTE — HONESTIDADE COM A ALUNA:
+  // "precoOriginal" só deve ser um valor que você realmente já cobrou (ou vai
+  // cobrar) por este curso depois da promoção. Não use um número inflado só
+  // para simular desconto — isso é propaganda enganosa (Código de Defesa do
+  // Consumidor). "promocaoValidaAte" deve ser uma data real: quando ela
+  // passar, volte o "preco" para o valor cheio (ou defina uma nova promoção
+  // real com nova data). O código não faz isso sozinho — é você quem honra o prazo.
   formacao: {
     preco: 97.00,
+    precoOriginal: 348.99,
+    promocaoValidaAte: "2026-08-15T23:59:59-03:00",
     descricao: "Formação Profissional Completa em Lash Designer"
   },
 
