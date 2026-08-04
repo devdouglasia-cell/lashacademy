@@ -21,6 +21,107 @@ const COURSE_DATA = {
     descricao: "Formação Profissional Completa em Lash Designer"
   },
 
+  // Extras / Bônus — produtos avulsos oferecidos como "serviços extras"
+  //
+  // REGRA DE HONESTIDADE (mesma lógica do preço da Formação):
+  // "bonusGratisAte" só pode ser uma data real. Enquanto ela não passar, o
+  // item é entregue de graça para quem compra a Formação Completa. Depois
+  // dela, o item deixa de ser bônus automático e passa a ser vendido
+  // separadamente, como card avulso na loja de Extras — igual aos demais.
+  // Isso é o que torna a urgência real, e não só uma contagem decorativa.
+  extras: [
+    {
+      id: "precificacao",
+      nome: "Precificação Lash: Quanto Cobrar Sem Perder Cliente",
+      tipo: "ebook",
+      resumo: "O passo a passo para calcular seu preço de verdade — sem chutar, sem copiar concorrência e sem trabalhar de graça.",
+      precoAvulso: 47.00,
+      bonusGratisAte: "2026-08-15T23:59:59-03:00", // mesma data da promoção da Formação
+      capitulos: [
+        {
+          titulo: "1. Por que copiar o preço da concorrência quebra seu negócio",
+          paragrafos: [
+            "É comum uma Lash Designer iniciante abrir o Instagram de outra profissional, ver o preço cobrado e copiar o mesmo valor — sem saber se aquele número cobre os custos dela ou não. O problema é que você não sabe a estrutura de custo de quem você está copiando: o espaço, o tempo de aplicação, os materiais usados e a região podem ser completamente diferentes dos seus.",
+            "Preço copiado sem cálculo é o motivo número um de profissionais trabalharem cheias de clientes e, no fim do mês, sem sobrar dinheiro. Encher a agenda não é sinônimo de lucro — é sinônimo de faturamento. Lucro é o que sobra depois de pagar tudo, inclusive o seu próprio tempo."
+          ]
+        },
+        {
+          titulo: "2. Os 4 custos que toda Lash Designer esquece de calcular",
+          paragrafos: [
+            "Custo de material por atendimento: cola, fios/fans, removedor, fita micropore, protetor de pálpebra, luvas e descartáveis. Some o valor de cada item usado em UM atendimento completo — não o valor da caixa inteira.",
+            "Custo do seu tempo: quantas horas você realmente gasta por atendimento, contando setup, aplicação e higienização da maca depois? Multiplique essas horas pelo valor que você quer ganhar por hora de trabalho — não pelo salário mínimo dividido por 220 horas, mas pelo que sustenta sua meta de renda.",
+            "Custo fixo rateado: aluguel de cadeira, sala ou proporcional do espaço da sua casa dedicado ao atendimento, internet, energia, e assinaturas (agenda online, edição de fotos). Divida o custo fixo mensal pelo número de atendimentos que você faz no mês.",
+            "Custo de reposição e atualização: pinças gastam o fio de precisão com o tempo, cursos de atualização técnica têm valor, e certificações também custam. Reserve uma fatia pequena do seu preço para isso — sem essa reserva, você paga essas despesas 'do seu bolso' sem perceber."
+          ]
+        },
+        {
+          titulo: "3. Fórmula prática de precificação (passo a passo com exemplo)",
+          paragrafos: [
+            "Fórmula: Preço = (Custo de material + Custo de tempo + Custo fixo rateado) ÷ (1 − margem de lucro desejada, em decimal).",
+            "Exemplo prático: material R$ 18, tempo de 1h40 a R$ 40/hora = R$ 66,70, custo fixo rateado R$ 12. Soma: R$ 96,70. Se você quer 30% de margem de lucro: R$ 96,70 ÷ (1 − 0,30) = R$ 96,70 ÷ 0,70 = R$ 138,14.",
+            "Perceba que esse valor não tem nada a ver com 'o que a profissional aqui do bairro cobra' — ele nasce da sua própria estrutura de custo e da margem que você decidiu ter. Se o resultado ficar muito acima do que o mercado da sua região paga, o ajuste correto é reduzir custo (tempo de aplicação, técnica, materiais) — não simplesmente baixar o preço e reduzir sua margem a zero."
+          ]
+        },
+        {
+          titulo: "4. Como reajustar preço sem perder clientela",
+          paragrafos: [
+            "Reajuste com aviso prévio: comunique a mudança com pelo menos 30 dias de antecedência para as clientes fixas, explicando o motivo (custo de material, tempo de mercado, evolução técnica) — transparência gera menos resistência do que um valor novo aparecendo do nada na hora de pagar.",
+            "Script de comunicação: 'Oi [nome]! Passando pra te avisar que a partir de [data] o valor da manutenção passa a ser R$ [novo valor]. Isso reflete [motivo real, ex: novo curso de volume russo que fiz / aumento no custo dos materiais]. Você continua sendo prioridade na minha agenda, viu? Bjo!'",
+            "Reajuste apenas para clientes novas primeiro, se preferir um caminho mais gradual — mantenha o preço atual para quem já é fiel por um período de transição, e aplique o novo valor só para quem agenda pela primeira vez a partir de agora."
+          ]
+        },
+        {
+          titulo: "5. Precificando pacotes e assinaturas mensais",
+          paragrafos: [
+            "Pacote de manutenção mensal (aplicação + 1 manutenção): calcule o custo de cada atendimento separadamente e ofereça um desconto pequeno (5% a 10%) pela garantia de recorrência — nunca um desconto tão alto que zere sua margem.",
+            "Assinatura trimestral ou semestral: cobre à vista ou parcelado, mas sempre calcule o valor total como se fossem atendimentos avulsos primeiro, e só depois aplique o desconto por fidelidade — isso evita subprecificar sem perceber."
+          ]
+        },
+        {
+          titulo: "6. Erros de precificação que fazem você trabalhar de graça",
+          paragrafos: [
+            "Não contar o tempo de deslocamento em atendimento domiciliar. Não cobrar taxa de remoção quando a cliente troca de profissional. Dar desconto 'de amiga' repetidamente sem calcular o impacto no mês. Incluir brindes ilimitados (retoque grátis a qualquer momento) sem prazo definido. Cada um desses pontos parece pequeno isoladamente, mas juntos são o motivo mais comum de uma agenda cheia e um caixa vazio."
+          ]
+        }
+      ],
+      checklist: [
+        "Calculei o custo de material de UM atendimento completo (não da caixa inteira)",
+        "Defini quanto vale a minha hora de trabalho",
+        "Ratiei meu custo fixo mensal pelo número de atendimentos do mês",
+        "Apliquei a fórmula de precificação com a margem que eu quero, não a que sobra",
+        "Tenho um script pronto para avisar clientes sobre reajuste de preço",
+        "Revejo meu preço a cada 3 a 6 meses, não deixo o valor congelado por anos"
+      ]
+    },
+    {
+      id: "legendas-instagram",
+      nome: "50 Legendas Prontas para Instagram de Lash Designer",
+      tipo: "ebook",
+      resumo: "Banco de legendas testadas para post de antes/depois, captação de clientes e datas comemorativas — copia e cola.",
+      precoAvulso: 37.00,
+      bonusGratisAte: null,
+      capitulos: null // conteúdo a ser adicionado
+    },
+    {
+      id: "biosseguranca-anamnese",
+      nome: "Checklist de Biossegurança + Ficha de Anamnese para Imprimir",
+      tipo: "pdf",
+      resumo: "Ficha de anamnese pronta e checklist de biossegurança para usar no primeiro atendimento de cada cliente nova.",
+      precoAvulso: 27.00,
+      bonusGratisAte: null,
+      capitulos: null // conteúdo a ser adicionado
+    },
+    {
+      id: "script-vendas",
+      nome: "Script de Vendas: Como Fechar o Primeiro Atendimento",
+      tipo: "ebook",
+      resumo: "Roteiro de conversa para responder objeções de preço e fechar o primeiro agendamento com clientes vindas do Instagram.",
+      precoAvulso: 37.00,
+      bonusGratisAte: null,
+      capitulos: null // conteúdo a ser adicionado
+    }
+  ],
+
   aulas: [
     {
       id: 1,
