@@ -9,6 +9,7 @@ const ICONS = {
   dashboard: `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V9.5Z"/></svg>`,
   cursos: `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15.5A1.5 1.5 0 0 1 18.5 20H6.5A2.5 2.5 0 0 1 4 17.5v-12Z"/><path stroke-linecap="round" d="M4 17.5A2.5 2.5 0 0 1 6.5 15H20"/></svg>`,
   mapa: `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20 3 17.5V6.5L9 4m0 16 6-2m-6 2V4m6 14 6 2.5V9.5L15 7m0 11V7m0 0L9 4"/></svg>`,
+  extras: `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M20.5 12.5 12.5 20.5a1.5 1.5 0 0 1-2.12 0L3.5 13.62a1.5 1.5 0 0 1 0-2.12L11.5 3.5H18a2.5 2.5 0 0 1 2.5 2.5v6.5Z"/><circle cx="15.5" cy="8.5" r="1.4"/></svg>`,
   conquistas: `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4Z"/><path stroke-linecap="round" d="M17 5h2.5a2.5 2.5 0 0 1-2.5 4.5M7 5H4.5A2.5 2.5 0 0 0 7 9.5"/></svg>`,
   perfil: `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.4"/><path stroke-linecap="round" d="M5 20c1-3.6 4-5.6 7-5.6s6 2 7 5.6"/></svg>`,
 };
@@ -22,11 +23,15 @@ function defaultState(){
     quizzesAprovados: [],
     pago: false,
     badges: [],
-    certificado: null // { codigo, data }
+    certificado: null, // { codigo, data }
+    extrasComprados: [] // ids de COURSE_DATA.extras já adquiridos (comprados ou resgatados como bônus)
   };
 }
 
 let state = loadState();
+
+// Seleção temporária de extras na loja (carrinho da página "Extras") — não persiste entre sessões
+let carrinhoExtras = new Set();
 
 function loadState(){
   try{
@@ -81,6 +86,23 @@ function cursoCompletoPago(){
   return state.pago && aulasPago.every(id => state.concluidas.includes(id)) && state.quizzesAprovados.includes("pago");
 }
 
+/* ---------------- Extras / Bônus — helpers ---------------- */
+function extraBonusAtivo(extra){
+  return !!extra.bonusGratisAte && new Date(extra.bonusGratisAte).getTime() > Date.now();
+}
+
+function possuiExtra(id){
+  return state.extrasComprados.includes(id);
+}
+
+function formatarDataCurta(iso){
+  return new Date(iso).toLocaleDateString("pt-BR");
+}
+
+function formatarPreco(valor){
+  return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
+
 /* ---------------- Toast ---------------- */
 let toastTimer = null;
 function showToast(msg){
@@ -119,6 +141,7 @@ function buildSidebar(){
     { key: "dashboard", label: "Dashboard", icon: ICONS.dashboard },
     { key: "cursos", label: "Cursos / Módulos", icon: ICONS.cursos },
     { key: "mapeamentos", label: "Mapeamentos", icon: ICONS.mapa },
+    { key: "extras", label: "Extras / Bônus", icon: ICONS.extras },
     { key: "conquistas", label: "Minhas Conquistas", icon: ICONS.conquistas },
     { key: "perfil", label: "Perfil / Certificado", icon: ICONS.perfil },
   ];
@@ -138,7 +161,9 @@ function buildSidebar(){
 
 function highlightSidebar(page){
   document.querySelectorAll(".nav-item").forEach(btn=>{
-    btn.classList.toggle("active", btn.dataset.route === page || (page==="aula" && btn.dataset.route==="cursos"));
+    btn.classList.toggle("active", btn.dataset.route === page
+      || (page==="aula" && btn.dataset.route==="cursos")
+      || (page==="extra" && btn.dataset.route==="extras"));
   });
 }
 
@@ -150,6 +175,8 @@ function render(){
     case "cursos": root.innerHTML = viewCursos(); attachCursosEvents(); break;
     case "aula": root.innerHTML = viewAula(param); attachAulaEvents(param); break;
     case "mapeamentos": root.innerHTML = viewMapeamentos(); attachMapeamentosEvents(); break;
+    case "extras": root.innerHTML = viewExtras(); attachExtrasEvents(); break;
+    case "extra": root.innerHTML = viewExtraDetalhe(param); attachExtraDetalheEvents(); break;
     case "conquistas": root.innerHTML = viewConquistas(); break;
     case "perfil": root.innerHTML = viewPerfil(); attachPerfilEvents(); break;
     default: root.innerHTML = viewDashboard(); attachDashboardEvents();
@@ -499,6 +526,146 @@ function calcularSecagem(umidade, temp){
   return { tempo: "1 a 1.5 segundo", mensagem: "Temperatura acima do ideal: fique atenta ao ressecamento precoce da cola no pote." };
 }
 
+/* ---------------- EXTRAS / BÔNUS (loja + carrinho) ---------------- */
+function viewExtras(){
+  const cards = COURSE_DATA.extras.map(extra => {
+    const owned = possuiExtra(extra.id);
+    const bonusAtivo = extraBonusAtivo(extra);
+    const temConteudo = !!(extra.capitulos && extra.capitulos.length);
+
+    let acaoHtml = "";
+    if(owned){
+      acaoHtml = temConteudo
+        ? `<button class="btn btn-primary" data-abrir-extra="${extra.id}" style="width:100%;">Ler agora →</button>`
+        : `<span style="color:var(--rosa-forte);font-weight:600;font-size:0.85rem;">✓ Adquirido — conteúdo em breve</span>`;
+    } else if(bonusAtivo){
+      acaoHtml = state.pago
+        ? `<button class="btn btn-gold" data-resgatar-bonus="${extra.id}" style="width:100%;">Resgatar bônus grátis 🎁</button>`
+        : `<button class="btn btn-gold" data-ver-formacao="1" style="width:100%;">Incluso grátis na Formação</button>`;
+    } else {
+      acaoHtml = `
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.85rem;cursor:pointer;">
+          <input type="checkbox" data-select-extra="${extra.id}" ${carrinhoExtras.has(extra.id) ? "checked":""}>
+          Adicionar ao carrinho
+        </label>
+      `;
+    }
+
+    const precoTag = (bonusAtivo && !owned)
+      ? `<span style="background:var(--dourado);color:var(--preto);font-size:0.72rem;font-weight:700;padding:3px 10px;border-radius:999px;display:inline-block;">🎁 BÔNUS até ${formatarDataCurta(extra.bonusGratisAte)}</span>`
+      : `<span class="font-display" style="font-size:1.3rem;color:var(--rosa-forte);">${formatarPreco(extra.precoAvulso)}</span>`;
+
+    return `
+      <div class="card" style="display:flex;flex-direction:column;gap:10px;">
+        <div class="eyebrow">${extra.tipo === "ebook" ? "E-book" : "Material para imprimir"}</div>
+        <h3 class="font-display" style="margin:0;font-size:1.1rem;">${extra.nome}</h3>
+        <p style="color:var(--cinza);font-size:0.88rem;flex:1;margin:0;">${extra.resumo}</p>
+        ${precoTag}
+        <div style="margin-top:6px;">${acaoHtml}</div>
+      </div>
+    `;
+  }).join("");
+
+  const totalCarrinho = [...carrinhoExtras].reduce((sum,id)=>{
+    const e = COURSE_DATA.extras.find(x=>x.id===id);
+    return sum + (e ? e.precoAvulso : 0);
+  }, 0);
+
+  return `
+    ${headerBlock("Loja da Academy", "Extras & Bônus", "Materiais complementares para acelerar seus resultados como Lash Designer.")}
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;${carrinhoExtras.size ? "margin-bottom:90px;":""}">
+      ${cards}
+    </div>
+    ${carrinhoExtras.size ? `
+      <div style="position:sticky;bottom:16px;background:var(--preto);color:var(--branco);border-radius:16px;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;box-shadow:0 8px 24px rgba(0,0,0,0.25);">
+        <div>${carrinhoExtras.size} ${carrinhoExtras.size===1 ? "item":"itens"} no carrinho — <strong>${formatarPreco(totalCarrinho)}</strong></div>
+        <button class="btn btn-gold" id="btn-finalizar-carrinho">Finalizar compra →</button>
+      </div>
+    ` : ""}
+  `;
+}
+
+function attachExtrasEvents(){
+  document.querySelectorAll("[data-select-extra]").forEach(chk=>{
+    chk.addEventListener("change", ()=>{
+      const id = chk.dataset.selectExtra;
+      if(chk.checked) carrinhoExtras.add(id); else carrinhoExtras.delete(id);
+      render();
+    });
+  });
+  document.querySelectorAll("[data-abrir-extra]").forEach(btn=>{
+    btn.addEventListener("click", ()=> navigate(`extra/${btn.dataset.abrirExtra}`));
+  });
+  document.querySelectorAll("[data-resgatar-bonus]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.dataset.resgatarBonus;
+      if(!state.extrasComprados.includes(id)){
+        state.extrasComprados.push(id);
+        saveState();
+        showToast("Bônus resgatado! Já está disponível para leitura.");
+        render();
+      }
+    });
+  });
+  document.querySelectorAll("[data-ver-formacao]").forEach(btn=>{
+    btn.addEventListener("click", ()=> openUpsellModal());
+  });
+  const btnFinalizar = document.getElementById("btn-finalizar-carrinho");
+  if(btnFinalizar){
+    btnFinalizar.addEventListener("click", ()=>{
+      openCheckoutModal({ incluirFormacao: false, extraIdsPreSelecionados: [...carrinhoExtras] });
+    });
+  }
+}
+
+function viewExtraDetalhe(id){
+  const extra = COURSE_DATA.extras.find(e => e.id === id);
+  if(!extra) return `<p>Item não encontrado.</p>`;
+
+  if(!possuiExtra(id)){
+    return `
+      <button class="btn btn-outline" style="margin-bottom:18px;" onclick="navigate('extras')">← Voltar aos Extras</button>
+      <div class="card">
+        <p>Você ainda não adquiriu <strong>${extra.nome}</strong>.</p>
+        <button class="btn btn-gold" onclick="navigate('extras')">Ver na loja de Extras</button>
+      </div>
+    `;
+  }
+
+  if(!extra.capitulos || !extra.capitulos.length){
+    return `
+      <button class="btn btn-outline" style="margin-bottom:18px;" onclick="navigate('extras')">← Voltar aos Extras</button>
+      <div class="card"><p>Conteúdo em preparação — em breve disponível aqui.</p></div>
+    `;
+  }
+
+  return `
+    <button class="btn btn-outline" style="margin-bottom:18px;" onclick="navigate('extras')">← Voltar aos Extras</button>
+    ${headerBlock("E-book Bônus", extra.nome, extra.resumo)}
+    <div class="card" id="extra-print">
+      ${extra.capitulos.map(cap => `
+        <h3 class="font-display" style="margin:18px 0 8px;">${cap.titulo}</h3>
+        ${cap.paragrafos.map(p=>`<p style="line-height:1.75;">${p}</p>`).join("")}
+      `).join("")}
+      ${extra.checklist ? `
+        <div style="background:var(--nude);border-radius:14px;padding:16px 18px;margin-top:18px;">
+          <strong>Checklist rápido</strong>
+          <ul style="margin:8px 0 0;padding-left:20px;">
+            ${extra.checklist.map(i=>`<li style="margin-bottom:4px;">${i}</li>`).join("")}
+          </ul>
+        </div>
+      ` : ""}
+    </div>
+    <div class="no-print" style="margin-top:16px;">
+      <button class="btn btn-primary" onclick="window.print()">Imprimir / Salvar em PDF</button>
+    </div>
+  `;
+}
+
+function attachExtraDetalheEvents(){
+  // sem eventos adicionais por enquanto — navegação usa onclick inline (mesmo padrão de viewAula)
+}
+
 /* ---------------- CONQUISTAS ---------------- */
 function viewConquistas(){
   const nivel = getNivel(state.xp);
@@ -657,38 +824,49 @@ function gerarCodigoAutenticidade(){
   return `LA-${ts}-${rand}`;
 }
 
-/* ---------------- MODAL: Upsell (bloqueio de conversão) + Pix real ---------------- */
-function openUpsellModal(){
+/* ---------------- MODAL: Checkout unificado (Formação + Extras) + Pix real ----------------
+   openCheckoutModal({ incluirFormacao, extraIdsPreSelecionados })
+   - incluirFormacao (default true): inclui a Formação Profissional Completa no carrinho
+   - extraIdsPreSelecionados: array de ids de COURSE_DATA.extras já marcados ao abrir
+   openUpsellModal() continua existindo como atalho para o fluxo de upsell da Formação. */
+function openCheckoutModal(opts){
+  opts = opts || {};
+  const incluirFormacao = opts.incluirFormacao !== false;
+  const selecaoExtras = new Set(opts.extraIdsPreSelecionados || []);
+
   const overlay = document.createElement("div");
   overlay.className = "modal-overlay";
-  overlay.id = "upsell-overlay";
+  overlay.id = "checkout-overlay";
 
   let pollTimer = null;
   let countdownTimer = null;
 
-  const preco = COURSE_DATA.formacao.preco;
-  const precoOriginal = COURSE_DATA.formacao.precoOriginal;
-  const precoFormatado = preco.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-  const precoOriginalFormatado = precoOriginal
-    ? precoOriginal.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })
-    : null;
-  const desconto = precoOriginal ? Math.round((1 - preco / precoOriginal) * 100) : 0;
+  const precoFormacao = COURSE_DATA.formacao.preco;
+  const precoOriginalFormacao = COURSE_DATA.formacao.precoOriginal;
   const promoDeadline = COURSE_DATA.formacao.promocaoValidaAte
     ? new Date(COURSE_DATA.formacao.promocaoValidaAte)
     : null;
 
-  function stopPolling(){
-    if(pollTimer){ clearInterval(pollTimer); pollTimer = null; }
+  function bonusAutomaticoIds(){
+    if(!incluirFormacao) return [];
+    return COURSE_DATA.extras.filter(e => extraBonusAtivo(e) && !possuiExtra(e.id)).map(e => e.id);
   }
-  function stopCountdown(){
-    if(countdownTimer){ clearInterval(countdownTimer); countdownTimer = null; }
+  function extrasCompraveis(){
+    const bonusIds = bonusAutomaticoIds();
+    return COURSE_DATA.extras.filter(e => !possuiExtra(e.id) && !bonusIds.includes(e.id));
+  }
+  function calcularTotal(){
+    let total = incluirFormacao ? precoFormacao : 0;
+    selecaoExtras.forEach(id=>{
+      const e = COURSE_DATA.extras.find(x=>x.id===id);
+      if(e) total += e.precoAvulso;
+    });
+    return total;
   }
 
-  function fechar(){
-    stopPolling();
-    stopCountdown();
-    overlay.remove();
-  }
+  function stopPolling(){ if(pollTimer){ clearInterval(pollTimer); pollTimer = null; } }
+  function stopCountdown(){ if(countdownTimer){ clearInterval(countdownTimer); countdownTimer = null; } }
+  function fechar(){ stopPolling(); stopCountdown(); overlay.remove(); }
 
   function formatarContagem(diffMs){
     if(diffMs <= 0) return null;
@@ -705,8 +883,6 @@ function openUpsellModal(){
 
   function iniciarContagem(){
     if(!promoDeadline) return;
-    const el = overlay.querySelector("#contagem-promo");
-    if(!el) return;
     const tick = () => {
       const diff = promoDeadline.getTime() - Date.now();
       const texto = formatarContagem(diff);
@@ -724,47 +900,93 @@ function openUpsellModal(){
   }
 
   function paintIntro(){
+    stopCountdown();
     const nomeAtual = (state.perfil.nome && state.perfil.nome !== "Sua Aluna") ? state.perfil.nome : "";
+    const bonusIds = bonusAutomaticoIds();
+    const bonusExtras = COURSE_DATA.extras.filter(e => bonusIds.includes(e.id));
+    const compraveis = extrasCompraveis();
+    const total = calcularTotal();
+    const totalFormatado = formatarPreco(total);
+    const precoFormacaoFormatado = formatarPreco(precoFormacao);
+    const precoOriginalFormatado = precoOriginalFormacao ? formatarPreco(precoOriginalFormacao) : null;
+    const desconto = precoOriginalFormacao ? Math.round((1 - precoFormacao / precoOriginalFormacao) * 100) : 0;
+
     overlay.innerHTML = `
-      <div class="modal-box">
+      <div class="modal-box" style="max-width:480px;max-height:88vh;overflow:auto;">
         <button class="modal-close" aria-label="Fechar">✕</button>
-        <div class="eyebrow">Você domina a teoria!</div>
-        <h2 class="font-display" style="margin:8px 0 14px;">Libere a Formação Profissional Completa</h2>
-        <p style="color:var(--cinza);line-height:1.6;">
-          Para aprender o isolamento perfeito, a química da cola para retenção de 30 dias,
-          mapeamentos avançados e emitir seu <strong>certificado oficial</strong>, libere a
-          Formação Profissional Completa.
-        </p>
-        <ul style="margin:16px 0;padding-left:20px;color:var(--preto);font-size:0.92rem;">
-          <li>5 aulas avançadas + certificado com 40h</li>
-          <li>Calculadora de secagem de cola</li>
-          <li>Quiz final com emissão automática de certificado</li>
-        </ul>
+        ${incluirFormacao ? `
+          <div class="eyebrow">Você domina a teoria!</div>
+          <h2 class="font-display" style="margin:8px 0 14px;">Libere a Formação Profissional Completa</h2>
+          <p style="color:var(--cinza);line-height:1.6;">
+            Isolamento perfeito, química da cola para retenção de 30 dias, mapeamentos avançados
+            e <strong>certificado oficial</strong> de 40h.
+          </p>
+        ` : `
+          <div class="eyebrow">Seu carrinho</div>
+          <h2 class="font-display" style="margin:8px 0 14px;">Finalizar compra</h2>
+        `}
 
         <div style="background:var(--nude);border-radius:14px;padding:16px 18px;margin-bottom:18px;">
-          <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;">
-            ${precoOriginalFormatado ? `<span style="font-size:1rem;color:var(--cinza);text-decoration:line-through;">${precoOriginalFormatado}</span>` : ""}
-            <span class="font-display" style="font-size:1.9rem;color:var(--rosa-forte);">${precoFormatado}</span>
-            ${desconto > 0 ? `<span style="background:var(--rosa-forte);color:var(--branco);font-size:0.75rem;font-weight:700;padding:3px 10px;border-radius:999px;">-${desconto}% hoje</span>` : ""}
+          ${incluirFormacao ? `
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+              <span>${COURSE_DATA.formacao.descricao}</span>
+              <span style="text-align:right;white-space:nowrap;">
+                ${precoOriginalFormatado ? `<span style="font-size:0.8rem;color:var(--cinza);text-decoration:line-through;margin-right:6px;">${precoOriginalFormatado}</span>` : ""}
+                <strong>${precoFormacaoFormatado}</strong>
+              </span>
+            </div>
+            ${desconto > 0 ? `<div style="margin-top:6px;"><span style="background:var(--rosa-forte);color:var(--branco);font-size:0.72rem;font-weight:700;padding:3px 10px;border-radius:999px;">-${desconto}% hoje</span></div>` : ""}
+          ` : ""}
+
+          ${bonusExtras.map(e => `
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;padding-top:10px;border-top:1px dashed rgba(34,28,26,0.15);">
+              <span>🎁 ${e.nome} <span style="color:var(--rosa-forte);font-size:0.76rem;">(bônus grátis)</span></span>
+              <strong style="color:var(--rosa-forte);white-space:nowrap;">Grátis</strong>
+            </div>
+          `).join("")}
+
+          ${compraveis.map(e => `
+            <label style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;padding-top:10px;border-top:1px dashed rgba(34,28,26,0.15);cursor:pointer;">
+              <span style="display:flex;align-items:center;gap:8px;">
+                <input type="checkbox" data-modal-extra="${e.id}" ${selecaoExtras.has(e.id) ? "checked":""}>
+                ${e.nome}
+              </span>
+              <strong style="white-space:nowrap;">+ ${formatarPreco(e.precoAvulso)}</strong>
+            </label>
+          `).join("")}
+
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:14px;padding-top:12px;border-top:1.5px solid var(--preto);">
+            <span style="font-weight:700;">Total</span>
+            <span class="font-display" style="font-size:1.7rem;color:var(--rosa-forte);">${totalFormatado}</span>
           </div>
           <div style="font-size:0.78rem;color:var(--cinza);margin-top:4px;">pagamento único via Pix · acesso liberado na hora</div>
-          ${promoDeadline ? `<div id="contagem-promo" style="font-size:0.82rem;color:var(--rosa-forte);font-weight:600;margin-top:8px;">calculando...</div>` : ""}
+          ${incluirFormacao && promoDeadline ? `<div id="contagem-promo" style="font-size:0.82rem;color:var(--rosa-forte);font-weight:600;margin-top:8px;">calculando...</div>` : ""}
         </div>
 
         <label style="font-size:0.85rem;font-weight:600;display:block;margin-bottom:6px;">
-          Seu nome completo <span style="font-weight:400;color:var(--cinza);">(vai aparecer no seu certificado)</span>
+          Seu nome completo ${incluirFormacao ? `<span style="font-weight:400;color:var(--cinza);">(vai aparecer no seu certificado)</span>` : ""}
         </label>
         <input id="input-nome-checkout" type="text" placeholder="Digite seu nome completo aqui"
                value="${escapeHtml(nomeAtual)}"
                style="width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid rgba(34,28,26,0.15);margin-bottom:18px;font-size:0.95rem;">
 
-        <button class="btn btn-gold" id="btn-gerar-pix" style="width:100%;">Garantir minha vaga com Pix →</button>
+        <button class="btn btn-gold" id="btn-gerar-pix" style="width:100%;" ${total <= 0 ? "disabled" : ""}>
+          Pagar ${totalFormatado} com Pix →
+        </button>
         <p style="font-size:0.72rem;color:var(--cinza);margin-top:10px;text-align:center;">
-          Sua vaga na condição promocional fica reservada só para hoje.
+          ${incluirFormacao ? "Sua vaga na condição promocional fica reservada só para hoje." : "Seu acesso é liberado automaticamente após a confirmação do Pix."}
         </p>
       </div>
     `;
+
     overlay.querySelector(".modal-close").addEventListener("click", fechar);
+    overlay.querySelectorAll("[data-modal-extra]").forEach(chk=>{
+      chk.addEventListener("change", ()=>{
+        const id = chk.dataset.modalExtra;
+        if(chk.checked) selecaoExtras.add(id); else selecaoExtras.delete(id);
+        paintIntro(); // repinta com o novo total
+      });
+    });
     overlay.querySelector("#btn-gerar-pix").addEventListener("click", () => {
       const nomeInput = overlay.querySelector("#input-nome-checkout");
       const nome = (nomeInput.value || "").trim();
@@ -778,7 +1000,7 @@ function openUpsellModal(){
       saveState();
       gerarPix();
     });
-    iniciarContagem();
+    if(incluirFormacao) iniciarContagem();
   }
 
   function paintCarregando(){
@@ -809,11 +1031,12 @@ function openUpsellModal(){
   }
 
   function paintAguardando(pix){
+    const totalFormatado = formatarPreco(calcularTotal());
     overlay.innerHTML = `
       <div class="modal-box" style="text-align:center;max-width:420px;">
         <button class="modal-close" aria-label="Fechar">✕</button>
         <div class="eyebrow">Escaneie ou copie o código</div>
-        <h2 class="font-display" style="margin:8px 0 4px;">Pague ${precoFormatado} via Pix</h2>
+        <h2 class="font-display" style="margin:8px 0 4px;">Pague ${totalFormatado} via Pix</h2>
         <p id="status-texto" style="color:var(--cinza);font-size:0.88rem;margin-bottom:16px;">
           <span class="pix-pulse"></span> Aguardando confirmação do pagamento...
         </p>
@@ -846,9 +1069,17 @@ function openUpsellModal(){
         if(!r.ok){ return; }
         if(dados.status === "approved"){
           stopPolling();
-          state.pago = true;
+          if(incluirFormacao){
+            state.pago = true;
+            unlockBadge("desbloqueou_formacao");
+          }
+          const bonusIds = bonusAutomaticoIds();
+          const idsLiberados = [...new Set([...bonusIds, ...selecaoExtras])];
+          idsLiberados.forEach(id=>{
+            if(!state.extrasComprados.includes(id)) state.extrasComprados.push(id);
+          });
+          carrinhoExtras.clear();
           saveState();
-          unlockBadge("desbloqueou_formacao");
           paintSucesso();
           render();
         }else if(["rejected","cancelled"].includes(dados.status)){
@@ -865,8 +1096,8 @@ function openUpsellModal(){
         <button class="modal-close" aria-label="Fechar">✕</button>
         <div style="font-size:2.4rem;">🎉</div>
         <h2 class="font-display" style="margin:10px 0;">Pagamento confirmado!</h2>
-        <p style="color:var(--cinza);">A Formação Profissional Completa já está liberada no seu acesso.</p>
-        <button class="btn btn-gold" id="btn-fechar-sucesso" style="width:100%;margin-top:16px;">Começar agora</button>
+        <p style="color:var(--cinza);">${incluirFormacao ? "A Formação Profissional Completa já está liberada no seu acesso." : "Seus itens já estão disponíveis na aba Extras."}</p>
+        <button class="btn btn-gold" id="btn-fechar-sucesso" style="width:100%;margin-top:16px;">Continuar</button>
       </div>
     `;
     overlay.querySelector(".modal-close").addEventListener("click", fechar);
@@ -875,11 +1106,17 @@ function openUpsellModal(){
 
   async function gerarPix(){
     paintCarregando();
+    const total = calcularTotal();
+    const itens = [
+      ...(incluirFormacao ? ["formacao"] : []),
+      ...bonusAutomaticoIds(),
+      ...[...selecaoExtras]
+    ];
     try{
       const resp = await fetch("/api/criar-pagamento", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome: state.perfil.nome, valor: preco })
+        body: JSON.stringify({ nome: state.perfil.nome, valor: total, itens })
       });
       const dados = await resp.json();
       if(!resp.ok){
@@ -895,6 +1132,12 @@ function openUpsellModal(){
   document.body.appendChild(overlay);
   paintIntro();
   overlay.addEventListener("click", (e)=>{ if(e.target === overlay) fechar(); });
+}
+
+// Atalho mantido por compatibilidade — usado em toda a base de código sempre que
+// uma aula paga é bloqueada, ou o botão "Liberar Formação Completa" é clicado.
+function openUpsellModal(){
+  openCheckoutModal({ incluirFormacao: true });
 }
 
 /* ---------------- MODAL: Quiz ---------------- */
