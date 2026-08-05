@@ -50,5 +50,115 @@
 <script src="js/data.js"></script>
 <script src="js/illustrations.js"></script>
 <script src="js/app.js"></script>
+  <!-- =========================================================================
+     RODAPÉ PADRÃO — ELITE DIGITAL IA
+     Cole este bloco inteiro logo antes de </body> no index.html do projeto.
+     Se o <head> ainda não carrega as fontes Oxanium/DM Sans, adicione também
+     a linha do Google Fonts indicada no comentário abaixo.
+     ========================================================================= -->
+
+<!-- Adicione no <head>, se ainda não existir:
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+-->
+
+<style>
+  .edia-footer{
+    background:#06070F;
+    color:#B9BDD1;
+    font-family:'DM Sans',sans-serif;
+    padding:56px 24px 32px;
+    margin-top:60px;
+  }
+  .edia-footer__inner{ max-width:960px; margin:0 auto; }
+  .edia-footer__brand{ display:flex; align-items:center; gap:16px; margin-bottom:36px; flex-wrap:wrap; }
+  .edia-footer__logo{ width:52px; height:52px; border-radius:14px; flex-shrink:0; }
+  .edia-footer__brand-text{ font-size:1.05rem; line-height:1.5; }
+  .edia-footer__brand-name{
+    font-family:'Oxanium',sans-serif;
+    font-weight:700;
+    background:linear-gradient(135deg,#F0C040,#C9922A);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  .edia-footer__cols{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(160px,1fr));
+    gap:32px;
+    margin-bottom:40px;
+  }
+  .edia-footer__col-title{
+    font-family:'Oxanium',sans-serif;
+    font-weight:700;
+    font-size:0.8rem;
+    letter-spacing:0.12em;
+    color:#F5F6FA;
+    margin-bottom:18px;
+  }
+  .edia-footer__link{
+    display:block;
+    color:#9AA0B8;
+    text-decoration:none;
+    font-size:0.95rem;
+    margin-bottom:14px;
+    transition:color .15s ease;
+  }
+  .edia-footer__link:hover{ color:#F0C040; }
+  .edia-footer__divider{ border:none; border-top:1px solid rgba(255,255,255,0.08); margin:8px 0 28px; }
+  .edia-footer__bottom{ text-align:center; color:#767C93; font-size:0.85rem; line-height:1.8; }
+  .edia-footer__tagline{
+    font-family:'JetBrains Mono','DM Sans',monospace;
+    font-size:0.78rem;
+    color:#5C6178;
+    margin-top:2px;
+  }
+
+  @media (max-width:520px){
+    .edia-footer__cols{ grid-template-columns:1fr; gap:28px; }
+  }
+</style>
+
+<footer class="edia-footer">
+  <div class="edia-footer__inner">
+
+    <div class="edia-footer__brand">
+      <!-- Troque o src abaixo pelo caminho do seu escudo ED nesse repositório,
+           ex: "assets/img/logo-elite-digital.png" -->
+      <img class="edia-footer__logo" src="assets/img/logo-elite-digital.png" alt="Elite Digital IA">
+      <div class="edia-footer__brand-text">
+        <span class="edia-footer__brand-name">Elite Digital IA</span>
+        — Sites, automação com IA e chatbots que vendem.
+      </div>
+    </div>
+
+    <div class="edia-footer__cols">
+      <div>
+        <div class="edia-footer__col-title">NAVEGAÇÃO</div>
+        <a class="edia-footer__link" href="https://elite-digital-portfolio-oficial.netlify.app/#servicos">Serviços</a>
+        <a class="edia-footer__link" href="https://elite-digital-portfolio-oficial.netlify.app/#projetos">Projetos</a>
+        <a class="edia-footer__link" href="https://elite-digital-portfolio-oficial.netlify.app/#faq">FAQ</a>
+      </div>
+      <div>
+        <div class="edia-footer__col-title">CONTATO</div>
+        <a class="edia-footer__link" href="https://wa.me/5511917700572" target="_blank" rel="noopener">WhatsApp (11) 91770-0572</a>
+        <a class="edia-footer__link" href="mailto:devdouglas.ia@gmail.com">devdouglas.ia@gmail.com</a>
+        <a class="edia-footer__link" href="https://instagram.com/ia.elitedigital" target="_blank" rel="noopener">@ia.elitedigital</a>
+      </div>
+    </div>
+
+    <hr class="edia-footer__divider">
+
+    <div class="edia-footer__bottom">
+      <div>© <span id="edia-ano-atual"></span> Elite Digital IA. Todos os direitos reservados.</div>
+      <div class="edia-footer__tagline">Marca técnica: douglasdev.io</div>
+    </div>
+
+  </div>
+</footer>
+
+<script>
+  document.getElementById('edia-ano-atual').textContent = new Date().getFullYear();
+</script>
 </body>
 </html>
