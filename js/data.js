@@ -100,7 +100,89 @@ const COURSE_DATA = {
       resumo: "Banco de legendas testadas para post de antes/depois, captação de clientes e datas comemorativas — copia e cola.",
       precoAvulso: 37.00,
       bonusGratisAte: null,
-      capitulos: null // conteúdo a ser adicionado
+      capitulos: [
+        {
+          titulo: "Antes e Depois (10 legendas)",
+          paragrafos: [
+            "1. Da timidez pro olhar de gata 😻 Manutenção feita hoje, retenção de 30 dias garantida. Agenda aberta, vem marcar o seu horário!",
+            "2. Transformação de hoje: volume russo fio a fio, curvatura D. Nada de photoshop — é técnica e cuidado. Comenta aqui se quiser esse efeito 👇",
+            "3. Reparou a diferença? Não é maquiagem, é extensão bem aplicada com mapeamento personalizado pro formato do olho dela.",
+            "4. Antes ela achava que cílio grande pesava. Depois descobriu que o segredo tá na curvatura certa, não no tamanho. Bora agendar a sua avaliação?",
+            "5. Do zero ao efeito boneca em 1h40. Aplicação feita com todo cuidado de biossegurança. Link na bio pra agendar 💛",
+            "6. Esse antes e depois não mente: cílio fio a fio clássico pra quem ama um efeito natural que ninguém percebe que é extensão.",
+            "7. Ela chegou insegura sobre o resultado. Saiu se olhando no espelho três vezes. É esse o efeito que eu busco em cada atendimento.",
+            "8. Retenção de 30 dias não é sorte, é técnica de acoplagem + cuidado em casa. Ensino tudo isso na manutenção também.",
+            "9. De olhos cansados pra olhar young lash: efeito esquilo pra quem quer um ar mais aberto e jovem sem exagero.",
+            "10. Antes ela usava máscara todo dia. Depois nunca mais precisou. Extensão bem feita muda a rotina — e a autoestima."
+          ]
+        },
+        {
+          titulo: "Captação de Clientes Novas (10 legendas)",
+          paragrafos: [
+            "11. Ainda não conhece a técnica de volume russo? Comenta 'EU QUERO' que te explico tudo por aqui e já reservo um horário.",
+            "12. 3 vagas abertas essa semana para primeira aplicação. Quem chegar primeiro no direct garante o horário 💌",
+            "13. Não sabe qual técnica combina com seu olho? Manda uma foto no direct que eu te digo qual efeito fica melhor em você.",
+            "14. Cliente nova ganha 10% de desconto na primeira manutenção. Vem conhecer meu trabalho!",
+            "15. Curiosa pra saber quanto tempo dura a extensão? Comenta aqui embaixo que eu te explico certinho.",
+            "16. Trabalho com biossegurança em cada detalhe: materiais esterilizados, protetor hipoalergênico e teste de alergia antes da primeira aplicação.",
+            "17. Amiga trouxe amiga, ganha desconto as duas. Programa de indicação ativo — chama no direct pra saber mais.",
+            "18. Ainda usando cílio postiço todo dia? Deixa eu te mostrar como a extensão resolve isso de vez.",
+            "19. Atendo em [seu bairro/cidade]. Se você é daqui e quer marcar, é só chamar no WhatsApp que combinamos o melhor horário.",
+            "20. Toda cliente nova recebe orientação completa de cuidados em casa pra reter o resultado por até 30 dias. Vem agendar!"
+          ]
+        },
+        {
+          titulo: "Datas Comemorativas (10 legendas)",
+          paragrafos: [
+            "21. Dia das Mães chegando — que tal presentear (ou se presentear) com um olhar novo? Agenda especial aberta.",
+            "22. Formatura chegando! Bora deixar o olhar pronto pra foto sem precisar de photoshop.",
+            "23. Ano novo, olhar novo. Bora começar o ano com a autoestima lá em cima?",
+            "24. Casamento chegando e você quer um olhar que aguenta o dia inteiro sem borrar? Fala comigo com antecedência pra garantir seu horário.",
+            "25. Dia dos Namorados: que tal chegar pro encontro com um efeito gatinho irresistível?",
+            "26. Réveillon é sinônimo de cílio marcado. Agenda de fim de ano é concorrida — garante já sua vaga.",
+            "27. Volta às aulas, volta à rotina — e nada como um cílio de manutenção em dia pra começar o semestre com confiança.",
+            "28. Aniversário chegando? Se presenteia com um olhar novo — combina com qualquer produção.",
+            "29. Black Friday: condição especial só essa semana pra quem fechar a Formação Completa comigo. (uso interno da Lash Academy, adapte para seu produto)",
+            "30. Verão chegando, hora de pensar num efeito mais leve pro dia a dia — bora conversar sobre qual técnica combina com você?"
+          ]
+        },
+        {
+          titulo: "Engajamento e Interação (10 legendas)",
+          paragrafos: [
+            "31. Qual efeito você prefere: gatinho, boneca ou natural? Comenta aqui embaixo 👇",
+            "32. Enquete nos Stories: você prefere volume russo ou fio a fio? Vota lá!",
+            "33. Marca aqui aquela amiga que precisa conhecer meu trabalho.",
+            "34. Se esse resultado te deixou apaixonada, deixa o like e salva esse post pra não perder quando for agendar.",
+            "35. Curiosidade do dia: você sabia que a cola de cílio seca com a umidade do ar, não com o oxigênio? Fascinante, né?",
+            "36. Qual foi o seu primeiro contato com extensão de cílios? Conta aqui nos comentários.",
+            "37. Fim de semana chegando — quem já garantiu horário de manutenção?",
+            "38. Dúvida de cliente: 'dói fazer?' Não! Quando bem aplicada, a extensão não causa nenhum desconforto. Comenta se você já ouviu esse mito também.",
+            "39. Esse é o meu espaço de trabalho — cada material esterilizado, cada detalhe pensado pra sua segurança.",
+            "40. Compartilha esse post com quem tá pensando em fazer a primeira extensão!"
+          ]
+        },
+        {
+          titulo: "Prova Social e Autoridade (10 legendas)",
+          paragrafos: [
+            "41. Mais uma cliente satisfeita saindo com o olhar renovado. Obrigada pela confiança! 💛",
+            "42. Formada e certificada em [técnica/curso], sempre em busca de atualização pra entregar o melhor resultado pra você.",
+            "43. Cada avaliação de 5 estrelas me motiva a continuar entregando o meu melhor. Obrigada, [nome da cliente]!",
+            "44. Depoimento de cliente: 'Nunca pensei que fosse durar tanto tempo sem cair!' — resultado de técnica + cuidado em casa.",
+            "45. Já são [número] atendimentos realizados com muito carinho e atenção aos detalhes.",
+            "46. Trabalho sempre com produtos de procedência garantida — sua segurança em primeiro lugar.",
+            "47. Antes de qualquer aplicação, faço teste de alergia com toda cliente nova. Segurança não é detalhe, é prioridade.",
+            "48. Bastidores do meu dia de trabalho: cada detalhe pensado pra você sair satisfeita.",
+            "49. Investir em atualização profissional é o que me permite trazer as técnicas mais atuais pra você.",
+            "50. Obrigada a cada cliente que confia no meu trabalho e me indica pra amigas e família. É por vocês que eu continuo evoluindo."
+          ]
+        }
+      ],
+      checklist: [
+        "Adapte o texto entre colchetes [ ] com informações reais do seu negócio antes de postar",
+        "Alterne entre os 5 tipos de legenda ao longo da semana para não repetir o mesmo tom sempre",
+        "Sempre inclua uma chamada para ação clara (comentar, chamar no direct, agendar)",
+        "Combine a legenda com foto ou vídeo de boa qualidade — luz natural indireta funciona melhor"
+      ]
     },
     {
       id: "biosseguranca-anamnese",
@@ -109,7 +191,58 @@ const COURSE_DATA = {
       resumo: "Ficha de anamnese pronta e checklist de biossegurança para usar no primeiro atendimento de cada cliente nova.",
       precoAvulso: 27.00,
       bonusGratisAte: null,
-      capitulos: null // conteúdo a ser adicionado
+      capitulos: [
+        {
+          titulo: "Checklist de Biossegurança — Antes do Atendimento",
+          paragrafos: [
+            "☐ Higienização completa das mãos com álcool 70% ou sabonete antisséptico",
+            "☐ Maca, cadeira e superfícies de apoio higienizadas com álcool 70%",
+            "☐ Pinças e materiais reutilizáveis esterilizados (autoclave) ou descartáveis novos abertos na frente da cliente",
+            "☐ Protetor de pálpebra inferior hipoalergênico separado e pronto para uso",
+            "☐ Cola dentro da validade e armazenada corretamente (pote fechado, longe de calor/umidade excessiva)",
+            "☐ Ficha de anamnese da cliente preenchida e assinada antes de iniciar"
+          ]
+        },
+        {
+          titulo: "Checklist de Biossegurança — Durante o Atendimento",
+          paragrafos: [
+            "☐ Uso de luvas descartáveis trocadas se houver qualquer interrupção do atendimento",
+            "☐ Aplicação do protetor de pálpebra inferior corretamente posicionada, sem tocar o globo ocular",
+            "☐ Cola aplicada sem contato com a pele ou glândulas de Meibômio",
+            "☐ Atenção redobrada a sinais de desconforto da cliente (coceira, ardência, lacrimejamento excessivo) — interromper se necessário",
+            "☐ Descarte correto de materiais perfurocortantes e descartáveis usados"
+          ]
+        },
+        {
+          titulo: "Checklist de Biossegurança — Depois do Atendimento",
+          paragrafos: [
+            "☐ Higienização completa da maca e superfícies antes do próximo atendimento",
+            "☐ Pinças reutilizáveis separadas para nova esterilização",
+            "☐ Orientações de cuidados em casa passadas verbalmente e, se possível, por escrito/WhatsApp",
+            "☐ Registro do atendimento (data, técnica usada, observações) para consulta na próxima manutenção"
+          ]
+        },
+        {
+          titulo: "Ficha de Anamnese — Campos para Preencher com a Cliente",
+          paragrafos: [
+            "Dados pessoais: nome completo, data de nascimento, telefone/WhatsApp, e-mail",
+            "Histórico de saúde ocular: já teve conjuntivite, blefarite, olho seco ou outra condição ocular? Usa lente de contato?",
+            "Histórico de alergias: já teve reação alérgica a cosméticos, colas, adesivos ou látex? Já fez extensão de cílios antes — teve alguma reação?",
+            "Uso de medicamentos: faz uso de colírio, medicação para os olhos, ou tratamento dermatológico na região?",
+            "Gestação/amamentação: está grávida ou amamentando? (Alguns protocolos recomendam cautela extra — informe-se com orientação profissional/médica sobre o procedimento nesse período.)",
+            "Expectativa da cliente: qual efeito ela busca (natural, volumoso, alongado)? Já viu alguma referência de foto?",
+            "Teste de alergia: data em que foi realizado o teste de mecha, resultado observado",
+            "Termo de consentimento: espaço para a cliente declarar ciência dos riscos e assinar, autorizando o procedimento",
+            "Assinatura da cliente e da profissional, com data do atendimento"
+          ]
+        }
+      ],
+      checklist: [
+        "Imprima uma ficha de anamnese nova para cada cliente — nunca reutilize a mesma ficha entre clientes diferentes",
+        "Guarde as fichas assinadas organizadas por ordem alfabética ou por data — servem como registro profissional",
+        "Refaça o teste de alergia sempre que trocar a marca da cola utilizada",
+        "Revise esse checklist de biossegurança periodicamente com toda a equipe, se você tiver colaboradoras"
+      ]
     },
     {
       id: "script-vendas",
@@ -118,7 +251,50 @@ const COURSE_DATA = {
       resumo: "Roteiro de conversa para responder objeções de preço e fechar o primeiro agendamento com clientes vindas do Instagram.",
       precoAvulso: 37.00,
       bonusGratisAte: null,
-      capitulos: null // conteúdo a ser adicionado
+      capitulos: [
+        {
+          titulo: "1. Como abrir a conversa no Direct ou WhatsApp",
+          paragrafos: [
+            "Quando alguém comenta ou manda mensagem perguntando sobre o serviço, responda rápido (idealmente em até algumas horas) e comece com uma pergunta, não com uma lista de preços. Isso evita que a conversa vire só uma cotação e abre espaço para você entender o que ela busca.",
+            "Exemplo de abertura: 'Oii! Que bom seu interesse 💛 Me conta, você já fez extensão antes ou seria a sua primeira vez?' — essa pergunta já direciona a conversa e mostra que você se importa com a experiência dela, não só com a venda."
+          ]
+        },
+        {
+          titulo: "2. Perguntas de qualificação antes de falar preço",
+          paragrafos: [
+            "Antes de informar valores, faça 2 ou 3 perguntas: já fez extensão antes? Qual efeito ela busca (natural, volumoso, alongado)? Tem alguma sensibilidade ou alergia conhecida? Isso te dá informação para recomendar a técnica certa e mostra profissionalismo — você não está só 'vendendo um serviço genérico'.",
+            "Só depois dessas perguntas, apresente a técnica recomendada com uma frase curta explicando o porquê: 'Pelo que você me contou, o volume híbrido combina bem com o efeito que você quer — nem tão marcado quanto o russo, nem tão discreto quanto o clássico.'"
+          ]
+        },
+        {
+          titulo: "3. Como responder 'Quanto custa?' sem espantar a cliente",
+          paragrafos: [
+            "Nunca responda só o número seco. Sempre acompanhe o valor do que está incluso: 'A aplicação de [técnica] fica R$ [valor] e inclui a avaliação do formato do seu olho, aplicação com produtos de procedência garantida e orientação completa de cuidados para durar até 30 dias.'",
+            "Se ela achar caro e não responder mais, não insista imediatamente — depois de um tempo, envie uma mensagem de valor (não de desconto): 'Fico à disposição se quiser tirar mais alguma dúvida sobre a técnica ou sobre os cuidados.' Isso mantém a porta aberta sem parecer desespero para vender."
+          ]
+        },
+        {
+          titulo: "4. Contornando a objeção 'Vou pensar'",
+          paragrafos: [
+            "'Vou pensar' quase sempre esconde uma dúvida não dita — pode ser preço, medo de não gostar do resultado, ou insegurança sobre a técnica. Em vez de aceitar e sumir, pergunte com gentileza: 'Consigo te ajudar com alguma dúvida específica? Às vezes é sobre o valor, às vezes é sobre o resultado — fico à vontade para esclarecer o que for.'",
+            "Se a resposta for sobre preço, você pode oferecer (com cautela, sem virar hábito) uma condição real, como o desconto de cliente nova, se você já tiver essa política — nunca invente um desconto fictício só para fechar naquele momento."
+          ]
+        },
+        {
+          titulo: "5. Fechando o agendamento",
+          paragrafos: [
+            "Quando perceber sinais de interesse (perguntas sobre disponibilidade, localização, forma de pagamento), parta para o fechamento direto: 'Tenho horário disponível [dia] às [hora] ou [dia] às [hora] — qual funciona melhor pra você?' Oferecer duas opções específicas facilita a decisão mais do que perguntar 'quando você pode?'.",
+            "Confirme o agendamento por escrito (mesma mensagem ou nota separada) com data, hora, valor e forma de pagamento, para evitar mal-entendidos e reduzir faltas."
+          ]
+        }
+      ],
+      checklist: [
+        "Responda mensagens de interesse o quanto antes — o interesse esfria rápido em poucas horas",
+        "Sempre qualifique antes de falar preço (pergunte antes de responder valor)",
+        "Nunca informe o preço 'seco' — sempre junto do que está incluso",
+        "Ofereça datas específicas no fechamento, não pergunte 'quando você pode'",
+        "Confirme o agendamento por escrito para reduzir faltas"
+      ]
     }
   ],
 
